@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FAFC">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- HEADER ADMIN TELKOM -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_batik_telkom"
+            android:elevation="4dp"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="36dp"
+            android:paddingBottom="24dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_circle_avatar"
+                    android:gravity="center"
+                    android:text="👨‍💼"
+                    android:textSize="22sp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvAdminTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Admin Control Centre"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvAdminRoleInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SMK Telkom Purwokerto"
+                        android:textColor="#FEE2E2"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- ============================================================== -->
+            <!-- SECTION 1: KHUSUS ADMIN KURIKULUM                              -->
+            <!-- ============================================================== -->
+            <LinearLayout
+                android:id="@+id/layoutKurikulumSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/btnUploadPdf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"
+                        android:background="#FEF2F2"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="📄 Dropzone for PDF Schedule Upload"
+                            android:textColor="@color/telkom_red"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Klik untuk upload/sinkron jadwal acuan PDF"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="⚡ Momentum Schedule Editor (Kurikulum)"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Target Kelas:"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp" />
+
+                <Spinner
+                    android:id="@+id/spKelas"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:background="@android:drawable/btn_dropdown" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pelajaran yang Ingin Diganti:"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="6dp" />
+
+                <Spinner
+                    android:id="@+id/spJadwalTarget"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:background="@android:drawable/btn_dropdown" />
+
+                <EditText
+                    android:id="@+id/etMapelBaru"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@android:drawable/edit_text"
+                    android:hint="Mapel Pengganti (Contoh: KIK Praktik)"
+                    android:padding="10dp"
+                    android:textSize="13sp" />
+
+                <Spinner
+                    android:id="@+id/spGuru"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@android:drawable/btn_dropdown" />
+
+                <Spinner
+                    android:id="@+id/spRuangan"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@android:drawable/btn_dropdown" />
+
+                <EditText
+                    android:id="@+id/etAlasan"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@android:drawable/edit_text"
+                    android:hint="Alasan (Contoh: Guru Izin Dinas / Tukar Ruang)"
+                    android:padding="10dp"
+                    android:textSize="13sp" />
+
+                <Button
+                    android:id="@+id/btnSaveMomentum"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="12dp"
+                    android:backgroundTint="@color/telkom_red"
+                    android:text="Simpan &amp; Timpa Jadwal Momentum"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <!-- ============================================================== -->
+            <!-- SECTION 2: KHUSUS ADMIN ORGANISASI (OSIS / PMR / MPK)         -->
+            <!-- ============================================================== -->
+            <LinearLayout
+                android:id="@+id/layoutOsisSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📌 Kelola Agenda Kalender (OSIS / PMR / MPK)"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tambahkan agenda event sekolah dengan penanda tanggal &amp; warna."
+                    android:textColor="@color/text_secondary"
+                    android:textSize="11sp" />
+
+                <EditText
+                    android:id="@+id/etNamaAgenda"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@android:drawable/edit_text"
+                    android:hint="Nama Kegiatan (Contoh: Latihan Gabungan PMR)"
+                    android:padding="10dp"
+                    android:textSize="13sp" />
+
+                <Spinner
+                    android:id="@+id/spKategoriOrganisasi"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@android:drawable/btn_dropdown" />
+
+                <!-- PILIHAN TANGGAL DI BULAN NOVEMBER -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Pilih Tanggal Kegiatan (November 2026):"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/spTanggalNovember"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@android:drawable/btn_dropdown" />
+
+                <!-- PILIHAN WARNA KOTAK PENANDA DI KALENDER -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Pilih Warna Penanda Kalender:"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <Spinner
+                    android:id="@+id/spWarnaEvent"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:layout_marginTop="4dp"
+                    android:background="@android:drawable/btn_dropdown" />
+
+                <EditText
+                    android:id="@+id/etLokasiAgenda"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@android:drawable/edit_text"
+                    android:hint="Lokasi Kegiatan (Contoh: Aula / Lapangan)"
+                    android:padding="10dp"
+                    android:textSize="13sp" />
+
+                <Button
+                    android:id="@+id/btnAddEvent"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="12dp"
+                    android:backgroundTint="#059669"
+                    android:text="+ Terbitkan Agenda ke Kalender"
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <!-- TOMBOL LOGOUT RESMI SETIAP AKUN ADMIN -->
+            <Button
+                android:id="@+id/btnAdminLogout"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="28dp"
+                android:layout_marginBottom="24dp"
+                android:backgroundTint="#EF4444"
+                android:text="🚪 Logout Sesi Admin"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

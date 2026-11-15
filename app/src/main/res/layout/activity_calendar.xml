@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FAFC">
+
+    <!-- FOTO GEDUNG TELKOM SEBAGAI BACKGROUND -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/gedung_telkom"
+        android:alpha="0.10"
+        android:contentDescription="Background Gedung Telkom" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- HEADER MOTIF BATIK MERAH TELKOM 70% TRANSPARANSI -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:background="@drawable/bg_batik_telkom"
+                android:padding="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Academic Calendar"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SMK Telkom Purwokerto • November 2026"
+                        android:textColor="#FEE2E2"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Grid Kalender Bulanan November 2026 -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:padding="14dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="7">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="Su" android:textColor="@color/telkom_red" android:textStyle="bold" />
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="Mo" android:textColor="@color/text_secondary" />
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="Tu" android:textColor="@color/text_secondary" />
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="We" android:textColor="@color/text_secondary" />
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="Th" android:textColor="@color/text_secondary" />
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="Fr" android:textColor="@color/text_secondary" />
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="Sa" android:textColor="@color/text_secondary" />
+                        </LinearLayout>
+
+                        <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginVertical="8dp" android:background="#F1F5F9" />
+
+                        <!-- Baris 1 - 7 (5 & 6 SCC) -->
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="7">
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="1" android:textColor="@color/telkom_red" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="2" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="3" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="4" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:background="#FEE2E2" android:gravity="center" android:text="5 •" android:textColor="@color/telkom_red" android:textStyle="bold" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:background="#FEE2E2" android:gravity="center" android:text="6 •" android:textColor="@color/telkom_red" android:textStyle="bold" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="7" />
+                        </LinearLayout>
+
+                        <!-- Baris 8 - 14 (10 Hari Pahlawan) -->
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="7">
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="8" android:textColor="@color/telkom_red" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="9" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:background="#FEF3C7" android:gravity="center" android:text="10 •" android:textColor="#B45309" android:textStyle="bold" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="11" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="12" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="13" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="14" />
+                        </LinearLayout>
+
+                        <!-- Baris 15 - 21 (20 PSAS) -->
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="7">
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="15" android:textColor="@color/telkom_red" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="16" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="17" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="18" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="19" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:background="#DBEAFE" android:gravity="center" android:text="20 •" android:textColor="#1E40AF" android:textStyle="bold" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="21" />
+                        </LinearLayout>
+
+                        <!-- Baris 22 - 28 -->
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="7">
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="22" android:textColor="@color/telkom_red" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="23" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="24" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="25" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="26" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="27" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="28" />
+                        </LinearLayout>
+
+                        <!-- Baris 29 - 30 -->
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="7">
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="29" android:textColor="@color/telkom_red" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="30" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" />
+                            <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="Upcoming Events (Klik untuk rincian):"
+                    android:textColor="@color/text_primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/calendarEventsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

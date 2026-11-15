@@ -1,0 +1,805 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootMainLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8FAFC"
+    tools:ignore="all">
+
+    <!-- FOTO BACKGROUND ASLI (MURNI TANPA KABUT) -->
+    <ImageView
+        android:id="@+id/ivCustomUserBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/gedung_telkom"
+        android:alpha="1.0"
+        android:contentDescription="Latar Belakang Akun" />
+
+    <!-- KONTAINER HALAMAN VIEW FLIPPER (9 LAYAR MODERN SYSTEM) -->
+    <ViewFlipper
+        android:id="@+id/viewFlipperPages"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/layoutBottomNavContainer">
+
+        <!-- ============================================================== -->
+        <!-- HALAMAN 1: BERANDA (PERSIS LAYAR 4 PADA KONSEP GAMBAR)          -->
+        <!-- ============================================================== -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- HEADER MERAH MELENGKUNG BESAR -->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_header_curved_red"
+                    android:elevation="8dp"
+                    android:paddingHorizontal="24dp"
+                    android:paddingTop="36dp"
+                    android:paddingBottom="32dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="54dp"
+                            android:layout_height="54dp"
+                            app:cardCornerRadius="27dp"
+                            app:cardElevation="3dp">
+
+                            <ImageView
+                                android:id="@+id/ivHeaderProfile"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/bg_circle_avatar"
+                                android:contentDescription="Foto Profil" />
+                        </androidx.cardview.widget.CardView>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Halo, selamat belajar!"
+                                android:textColor="#FEE2E2"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/tvStudentName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Naufal Azka Ilhami"
+                                android:textColor="@color/white"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvStudentClass"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="PPLG • XI PPLG 4"
+                                android:textColor="#FEE2E2"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/btnHeaderBell"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="?android:attr/selectableItemBackgroundBorderless"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/ic_logo_header"
+                            android:contentDescription="Logo Sekolah" />
+                    </LinearLayout>
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- SELECTOR HARI -->
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <Button android:id="@+id/btnDaySenin" android:layout_width="wrap_content" android:layout_height="38dp" android:backgroundTint="@color/telkom_red" android:text="Senin" android:textColor="@color/white" android:textSize="12sp" />
+                            <Button android:id="@+id/btnDaySelasa" android:layout_width="wrap_content" android:layout_height="38dp" android:layout_marginStart="6dp" android:backgroundTint="@color/white" android:text="Selasa" android:textColor="@color/text_primary" android:textSize="12sp" />
+                            <Button android:id="@+id/btnDayRabu" android:layout_width="wrap_content" android:layout_height="38dp" android:layout_marginStart="6dp" android:backgroundTint="@color/white" android:text="Rabu" android:textColor="@color/text_primary" android:textSize="12sp" />
+                            <Button android:id="@+id/btnDayKamis" android:layout_width="wrap_content" android:layout_height="38dp" android:layout_marginStart="6dp" android:backgroundTint="@color/white" android:text="Kamis" android:textColor="@color/text_primary" android:textSize="12sp" />
+                            <Button android:id="@+id/btnDayJumat" android:layout_width="wrap_content" android:layout_height="38dp" android:layout_marginStart="6dp" android:backgroundTint="@color/white" android:text="Jumat" android:textColor="@color/text_primary" android:textSize="12sp" />
+                        </LinearLayout>
+                    </HorizontalScrollView>
+
+                    <!-- KARTU MAPEL HARI INI (HORIZONTAL SWIPE) -->
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:id="@+id/layoutTimetableCards"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal" />
+                    </HorizontalScrollView>
+
+                    <!-- MINI CUPLIKAN KALENDER BULANAN (SESUAI KONSEP LAYAR 4) -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="Cuplikan Kalender • November 2026"
+                        android:textColor="@color/text_primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="2dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="horizontal"
+                                android:weightSum="5">
+
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="Sen\n3" android:textSize="12sp" />
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="Sel\n4" android:textSize="12sp" />
+                                <!-- Tanggal Aktif Merah Bulat (SCC) -->
+                                <TextView android:layout_width="0dp" android:layout_height="44dp" android:layout_weight="1" android:background="@drawable/bg_fab_center" android:gravity="center" android:text="Rab\n5" android:textColor="@color/white" android:textStyle="bold" android:textSize="11sp" />
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="Kam\n6" android:textSize="12sp" />
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="Jum\n7" android:textSize="12sp" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:text="📍 05 - 06 Nov: SCC (Stematel Creative Challenge)"
+                                android:textColor="@color/telkom_red"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- PEMBERITAHUAN TERBARU -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Pemberitahuan Terbaru"
+                            android:textColor="@color/text_primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/btnSetTimer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_badge_tag"
+                            android:paddingHorizontal="10dp"
+                            android:paddingVertical="4dp"
+                            android:text="⏱️ Atur Waktu"
+                            android:textColor="@color/telkom_red"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- CARD PENGINGAT JAM -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardNotifPergantianJam"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="2dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:padding="14dp">
+
+                            <TextView
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                android:background="#FEE2E2"
+                                android:gravity="center"
+                                android:text="🔔"
+                                android:textSize="18sp" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvNotifTitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Pengingat Pergantian Jam"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/tvNotifDesc"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Ketuk kartu pelajaran di atas untuk mengatur pengingat."
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="11sp" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="›"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="20sp" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- CARD STATUS MOMENTUM -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardNotifMomentum"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="24dp"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="2dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:padding="14dp">
+
+                            <TextView
+                                android:layout_width="38dp"
+                                android:layout_height="38dp"
+                                android:background="#FEE2E2"
+                                android:gravity="center"
+                                android:text="⚠️"
+                                android:textSize="18sp" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvMomentumTitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Pembaruan Jadwal Momentum"
+                                    android:textColor="@color/accent_momentum"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Ketuk untuk memeriksa status pergantian jadwal mendadak."
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="11sp" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="›"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="20sp" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- ============================================================== -->
+        <!-- HALAMAN 2: JADWAL PELAJARAN (SKETSA PILAR TIMELINE)            -->
+        <!-- ============================================================== -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_header_curved_red"
+                    android:elevation="6dp"
+                    android:paddingHorizontal="24dp"
+                    android:paddingTop="36dp"
+                    android:paddingBottom="28dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvTitleSchedule"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Jadwal Pelajaran"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Timeline Pembelajaran Lengkap (Senin - Jumat)"
+                            android:textColor="#FEE2E2"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </FrameLayout>
+
+                <LinearLayout
+                    android:id="@+id/scheduleContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp" />
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- ============================================================== -->
+        <!-- HALAMAN 3: KALENDER AKADEMIK (PERSIS KONSEP LAYAR 6)           -->
+        <!-- ============================================================== -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_header_curved_red"
+                    android:elevation="6dp"
+                    android:paddingHorizontal="24dp"
+                    android:paddingTop="36dp"
+                    android:paddingBottom="28dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Kalender Akademik 2026/2027"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Panduan Jadwal Evaluasi &amp; Kegiatan SMK Telkom Purwokerto"
+                            android:textColor="#FEE2E2"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="2dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:orientation="vertical"
+                            android:padding="14dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:weightSum="7">
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="Min" android:textColor="@color/telkom_red" android:textStyle="bold" />
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="Sen" android:textColor="@color/text_secondary" />
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="Sel" android:textColor="@color/text_secondary" />
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="Rab" android:textColor="@color/text_secondary" />
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="Kam" android:textColor="@color/text_secondary" />
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="Jum" android:textColor="@color/text_secondary" />
+                                <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" android:text="Sab" android:textColor="@color/text_secondary" />
+                            </LinearLayout>
+
+                            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginVertical="8dp" android:background="#F1F5F9" />
+
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="7">
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="1" android:textColor="@color/telkom_red" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="2" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="3" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="4" />
+                                <TextView android:id="@+id/tvDate5" android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:background="#FEE2E2" android:gravity="center" android:text="5 •" android:textColor="@color/telkom_red" android:textStyle="bold" />
+                                <TextView android:id="@+id/tvDate6" android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:background="#FEE2E2" android:gravity="center" android:text="6 •" android:textColor="@color/telkom_red" android:textStyle="bold" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="7" />
+                            </LinearLayout>
+
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="7">
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="8" android:textColor="@color/telkom_red" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="9" />
+                                <TextView android:id="@+id/tvDate10" android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:background="#FEF3C7" android:gravity="center" android:text="10 •" android:textColor="#B45309" android:textStyle="bold" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="11" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="12" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="13" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="14" />
+                            </LinearLayout>
+
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="7">
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="15" android:textColor="@color/telkom_red" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="16" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="17" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="18" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="19" />
+                                <TextView android:id="@+id/tvDate20" android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:background="#DBEAFE" android:gravity="center" android:text="20 •" android:textColor="#1E40AF" android:textStyle="bold" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="21" />
+                            </LinearLayout>
+
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="7">
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="22" android:textColor="@color/telkom_red" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="23" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="24" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="25" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="26" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="27" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="28" />
+                            </LinearLayout>
+
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="7">
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="29" android:textColor="@color/telkom_red" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" android:gravity="center" android:text="30" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" />
+                                <TextView android:layout_width="0dp" android:layout_height="32dp" android:layout_weight="1" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="Agenda Mendatang (Ketuk untuk rincian):"
+                        android:textColor="@color/text_primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:id="@+id/calendarEventsContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- ============================================================== -->
+        <!-- HALAMAN 4: RIWAYAT NOTIFIKASI (PERSIS KONSEP LAYAR 8)          -->
+        <!-- ============================================================== -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_header_curved_red"
+                    android:elevation="6dp"
+                    android:paddingHorizontal="24dp"
+                    android:paddingTop="36dp"
+                    android:paddingBottom="28dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pusat Pemberitahuan"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Riwayat Pengingat Jadwal &amp; Momentum Real-time"
+                            android:textColor="#FEE2E2"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </FrameLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutNotifHistoryContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp" />
+            </LinearLayout>
+        </ScrollView>
+
+        <!-- ============================================================== -->
+        <!-- HALAMAN 5: PROFIL PENGGUNA (PERSIS KONSEP LAYAR 9)             -->
+        <!-- ============================================================== -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- HEADER MERAH LENGKUNG BESAR PROFIL -->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_header_curved_red"
+                    android:elevation="6dp"
+                    android:paddingHorizontal="24dp"
+                    android:paddingTop="36dp"
+                    android:paddingBottom="36dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="96dp"
+                            android:layout_height="96dp"
+                            app:cardCornerRadius="48dp"
+                            app:cardElevation="4dp">
+
+                            <ImageView
+                                android:id="@+id/ivProfileMain"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/bg_circle_avatar"
+                                android:contentDescription="Foto Profil" />
+                        </androidx.cardview.widget.CardView>
+
+                        <TextView
+                            android:id="@+id/tvProfileName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            android:gravity="center"
+                            android:text="Naufal Azka Ilhami"
+                            android:textColor="@color/white"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvProfileClass"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:gravity="center"
+                            android:text="NIS: 20261104 • Siswa"
+                            android:textColor="#FEE2E2"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </FrameLayout>
+
+                <!-- CARD INFORMASI DETAIL PPLG -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="18dp"
+                        app:cardElevation="3dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="20dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="DETAIL AKUN &amp; AKADEMIK"
+                                android:textColor="@color/telkom_red"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginVertical="12dp"
+                                android:background="#F1F5F9" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Konsentrasi Keahlian:\nPengembangan Perangkat Lunak dan Gim (PPLG)"
+                                android:textColor="@color/text_primary"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="Kelas &amp; Wali Kelas:\nXI PPLG 4 • Wali Kelas: Bu Firda"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="Status Sesi:\nSesi 1x Masuk Persisten (Aktif)"
+                                android:textColor="#059669"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- TOMBOL LOGOUT RESMI -->
+                    <Button
+                        android:id="@+id/btnLogout"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="24dp"
+                        android:backgroundTint="@color/telkom_red"
+                        android:text="Keluar Akun"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </ViewFlipper>
+
+    <!-- BILAH NAVIGASI BAWAH LIQUID GLASS -->
+    <RelativeLayout
+        android:id="@+id/layoutBottomNavContainer"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/bg_bottom_nav"
+        android:elevation="16dp">
+
+        <View
+            android:id="@+id/viewLiquidBubble"
+            android:layout_width="64dp"
+            android:layout_height="46dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_liquid_bubble"
+            android:elevation="2dp" />
+
+        <LinearLayout
+            android:id="@+id/layoutTabItems"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:elevation="4dp"
+            android:weightSum="5">
+
+            <LinearLayout android:id="@+id/tabHome" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+                <TextView android:id="@+id/iconHome" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🏠" android:textSize="18sp" />
+                <TextView android:id="@+id/textHome" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Beranda" android:textColor="@color/white" android:textSize="10sp" android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/tabSchedule" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+                <TextView android:id="@+id/iconSchedule" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📖" android:textSize="18sp" />
+                <TextView android:id="@+id/textSchedule" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Jadwal" android:textColor="@color/text_secondary" android:textSize="10sp" />
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/tabCalendar" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+                <TextView android:id="@+id/iconCalendar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="📅" android:textSize="18sp" />
+                <TextView android:id="@+id/textCalendar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Kalender" android:textColor="@color/text_secondary" android:textSize="10sp" />
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/tabNotif" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+                <TextView android:id="@+id/iconNotif" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="🔔" android:textSize="18sp" />
+                <TextView android:id="@+id/textNotif" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Notifikasi" android:textColor="@color/text_secondary" android:textSize="10sp" />
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/tabProfile" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+                <TextView android:id="@+id/iconProfile" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="👤" android:textSize="18sp" />
+                <TextView android:id="@+id/textProfile" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Profil" android:textColor="@color/text_secondary" android:textSize="10sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

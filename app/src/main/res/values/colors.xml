@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Warna Utama Telkom -->
+    <color name="telkom_red">#B91C1C</color>
+    <color name="telkom_red_dark">#7F1D1D</color>
+    <color name="telkom_red_light">#FEE2E2</color>
+    <color name="accent_momentum">#EA580C</color>
+    <color name="bg_light">#F8FAFC</color>
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <!-- Warna Tema Hari Pelajaran Sesuai Request -->
+    <color name="bg_senin">#1E40AF</color>         <!-- Biru Polos -->
+    <color name="bg_selasa">#E2E8F0</color>        <!-- Abu-abu Muda -->
+    <color name="bg_rabu">#FEE2E2</color>          <!-- Aksen Merah/Putih Lembut -->
+    <color name="bg_kamis">#18181B</color>         <!-- Hitam Elegan -->
+    <color name="bg_jumat">#FEF3C7</color>         <!-- Cokelat Muda / Warm Beige -->
+    <color name="text_cokelat_tua">#78350F</color> <!-- Teks Cokelat Tua -->
+</resources>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    android:orientation="horizontal">
+
+    <!-- PILAR KIRI: TEKS HARI VERTIKAL MENGIKUTI TINGGI KUMPULAN MAPEL -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardDayPillar"
+        android:layout_width="54dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="12dp"
+        app:cardCornerRadius="18dp"
+        app:cardElevation="3dp">
+
+        <LinearLayout
+            android:id="@+id/layoutDayPillarContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingVertical="16dp"
+            android:orientation="vertical">
+
+            <!-- Teks Nama Hari Tersusun Huruf ke Bawah (Contoh: R \n A \n B \n U) -->
+            <TextView
+                android:id="@+id/tvVerticalDayName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lineSpacingExtra="6dp"
+                android:text="R\nA\nB\nU"
+                android:textColor="@color/text_primary"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- WADAH KANAN: MENAMPUNG SELURUH KARTU MAPEL PADA HARI TERSEBUT -->
+    <LinearLayout
+        android:id="@+id/layoutDayCardsContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical" />
+
+</LinearLayout>
