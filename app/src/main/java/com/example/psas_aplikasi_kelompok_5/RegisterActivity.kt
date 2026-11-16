@@ -19,14 +19,14 @@ class RegisterActivity : AppCompatActivity() {
         db = AppDatabase(this)
 
         // Dropdown Kelas Sesuai Jurusan
-        val listKelas = arrayOf("XI PPLG 4", "XI PPLG 1", "XI PPLG 2", "XI PPLG 3", "XI PPLG 5", "XI TJKT 1", "XI TJKT 2")
-        binding.spRegKelas.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, listKelas)
+        binding.spRegKelas.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, KelasCatalog.names())
 
         binding.btnSubmitRegister.setOnClickListener {
             val nama = binding.etRegNama.text.toString().trim()
             val user = binding.etRegUser.text.toString().trim()
             val pass = binding.etRegPass.text.toString().trim()
             val passConfirm = binding.etRegPassConfirm.text.toString().trim()
+            val idKelas = KelasCatalog.idAt(binding.spRegKelas.selectedItemPosition)
 
             if (nama.isEmpty() || user.isEmpty() || pass.isEmpty()) {
                 Toast.makeText(this, "Lengkapi seluruh data pendaftaran!", Toast.LENGTH_SHORT).show()
@@ -44,7 +44,7 @@ class RegisterActivity : AppCompatActivity() {
                 put("username", user)
                 put("password", pass)
                 put("nama_lengkap", nama)
-                put("id_kelas", 4) // Default XI PPLG 4
+                put("id_kelas", idKelas)
                 put("role", "Siswa")
             }
             val res = writableDb.insert("users", null, cv)

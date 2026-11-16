@@ -100,13 +100,14 @@ class AdminActivity : AppCompatActivity() {
                 idJadwal = targetIdJadwal,
                 mapel = mapelBaru,
                 guru = guruBaru,
-                waktu = "Sesi Diperbarui",
+                waktu = "",
                 ruang = ruangBaru,
                 alasan = if (alasan.isEmpty()) "Pergantian Dinamis" else alasan
             )
 
             Toast.makeText(this, "Jadwal Momentum Berhasil Ditimpa secara Real-Time!", Toast.LENGTH_LONG).show()
-            finish()
+            binding.etMapelBaru.text.clear()
+            binding.etAlasan.text.clear()
         }
 
         // AKSI OSIS: TAMBAH AGENDA DENGAN TANGGAL & WARNA KHUSUS

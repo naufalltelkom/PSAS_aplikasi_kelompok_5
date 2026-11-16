@@ -5,12 +5,12 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
-class AppDatabase(context: Context) : SQLiteOpenHelper(context, "telkom_school.db", null, 10) {
+class AppDatabase(context: Context) : SQLiteOpenHelper(context, "telkom_school.db", null, 11) {
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL("CREATE TABLE users (id_user INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, password TEXT, nama_lengkap TEXT, id_kelas INTEGER, role TEXT)")
+        db.execSQL("CREATE TABLE users (id_user INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, password TEXT, nama_lengkap TEXT, id_kelas INTEGER, role TEXT)")
         db.execSQL("CREATE TABLE jadwal (id_jadwal INTEGER PRIMARY KEY AUTOINCREMENT, id_kelas INTEGER, mapel TEXT, guru TEXT, waktu TEXT, ruang TEXT, hari TEXT)")
-        db.execSQL("CREATE TABLE momentum (id_momentum INTEGER PRIMARY KEY AUTOINCREMENT, id_jadwal INTEGER, mapel_baru TEXT, guru_baru TEXT, waktu_baru TEXT, ruang_baru TEXT, alasan TEXT)")
+        db.execSQL("CREATE TABLE momentum (id_momentum INTEGER PRIMARY KEY AUTOINCREMENT, id_jadwal INTEGER UNIQUE, mapel_baru TEXT, guru_baru TEXT, waktu_baru TEXT, ruang_baru TEXT, alasan TEXT)")
 
         // Tabel Kalender dilengkapi kolom 'tanggal_angka' (1-30) dan 'warna_hex'
         db.execSQL("CREATE TABLE kalender (id_agenda INTEGER PRIMARY KEY AUTOINCREMENT, nama_agenda TEXT, kategori TEXT, tanggal TEXT, tanggal_angka INTEGER, warna_hex TEXT, lokasi TEXT)")
@@ -84,11 +84,12 @@ class AppDatabase(context: Context) : SQLiteOpenHelper(context, "telkom_school.d
             val hari = cursor.getString(cursor.getColumnIndexOrThrow("hari"))
             var isMomentum = "false"
 
-            val mCursor = db.rawQuery("SELECT * FROM momentum WHERE id_jadwal = ?", arrayOf(idJadwal.toString()))
+            val mCursor = db.rawQuery("SELECT * FROM momentum WHERE id_jadwal = ? ORDER BY id_momentum DESC LIMIT 1", arrayOf(idJadwal.toString()))
             if (mCursor.moveToFirst()) {
                 mapel = mCursor.getString(mCursor.getColumnIndexOrThrow("mapel_baru"))
                 guru = mCursor.getString(mCursor.getColumnIndexOrThrow("guru_baru"))
-                waktu = mCursor.getString(mCursor.getColumnIndexOrThrow("waktu_baru"))
+                val waktuBaru = mCursor.getString(mCursor.getColumnIndexOrThrow("waktu_baru"))
+                if (!waktuBaru.isNullOrBlank()) waktu = waktuBaru
                 ruang = mCursor.getString(mCursor.getColumnIndexOrThrow("ruang_baru")) + " (" + mCursor.getString(mCursor.getColumnIndexOrThrow("alasan")) + ")"
                 isMomentum = "true"
             }

@@ -38,6 +38,7 @@ class LoginActivity : AppCompatActivity() {
                 val role = user["role"] ?: "Siswa"
                 val namaLengkap = user["nama_lengkap"] ?: username
                 val idKelas = user["id_kelas"]?.toIntOrNull() ?: 4
+                val remember = binding.switchRemember.isChecked
 
                 if (role.contains("Admin", ignoreCase = true)) {
                     session.saveLoginSession(
@@ -46,7 +47,8 @@ class LoginActivity : AppCompatActivity() {
                         role = role,
                         kelasId = 0,
                         kelasNama = "Kurikulum & Organisasi",
-                        siswaNama = namaLengkap
+                        siswaNama = namaLengkap,
+                        remember = remember
                     )
                     Toast.makeText(this, "Selamat datang, $namaLengkap!", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this, AdminActivity::class.java))
@@ -56,8 +58,9 @@ class LoginActivity : AppCompatActivity() {
                         username = username,
                         role = "Siswa",
                         kelasId = idKelas,
-                        kelasNama = "XI PPLG 4",
-                        siswaNama = namaLengkap
+                        kelasNama = KelasCatalog.name(idKelas),
+                        siswaNama = namaLengkap,
+                        remember = remember
                     )
                     Toast.makeText(this, "Berhasil masuk! Halo $namaLengkap", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this, MainActivity::class.java))

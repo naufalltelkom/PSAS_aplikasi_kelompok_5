@@ -16,9 +16,9 @@ class SessionManager(context: Context) {
         const val KEY_SISWA_NAMA = "siswaNama"
     }
 
-    fun saveLoginSession(userId: Int, username: String, role: String, kelasId: Int, kelasNama: String, siswaNama: String) {
+    fun saveLoginSession(userId: Int, username: String, role: String, kelasId: Int, kelasNama: String, siswaNama: String, remember: Boolean = true) {
         prefs.edit().apply {
-            putBoolean(KEY_IS_LOGGED_IN, true)
+            putBoolean(KEY_IS_LOGGED_IN, remember)
             putInt(KEY_USER_ID, userId)
             putString(KEY_USERNAME, username)
             putString(KEY_ROLE, role)

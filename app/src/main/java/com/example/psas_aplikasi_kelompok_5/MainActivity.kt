@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private var currentCalendarMonth = 11 // 11 = November 2026, 12 = Desember 2026
     private var currentNotifFilter = "Semua"
     private var activeDaySchedule = "Senin"
+    private var activeDashDay = "Senin"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,9 +93,31 @@ class MainActivity : AppCompatActivity() {
             showNotification(102, title, "Ruang baru: " + latestMomentum["ruang_baru"] + " (" + latestMomentum["alasan"] + ")")
         }
 
-        // Klik Card Notifikasi / Lonceng Momentum di Dashboard -> Langsung Pindah ke Halaman Notifikasi
+        // Klik Card Momentum di Dashboard -> tampilkan detail & opsi kembalikan jadwal normal
         binding.cardNotifMomentum.setOnClickListener {
-            switchTab(3)
+            val momentum = db.getLatestMomentum()
+            if (momentum != null) {
+                AlertDialog.Builder(this)
+                    .setTitle("Perubahan Jadwal: " + momentum["mapel_baru"])
+                    .setMessage(
+                        "Mata Pelajaran: ${momentum["mapel_baru"]}\n" +
+                                "Guru Pengganti: ${momentum["guru_baru"]}\n" +
+                                "Ruangan: ${momentum["ruang_baru"]}\n" +
+                                "Keterangan: ${momentum["alasan"]}\n\n" +
+                                "Kembalikan jadwal ke kondisi reguler?"
+                    )
+                    .setPositiveButton("Kembalikan Normal") { _, _ ->
+                        db.clearMomentum()
+                        binding.tvMomentumTitle.text = "Pembaruan Jadwal Momentum"
+                        Toast.makeText(this, "Jadwal berhasil dikembalikan ke semula!", Toast.LENGTH_LONG).show()
+                        selectDayDashboard(activeDashDay, getDashButtonForDay(activeDashDay))
+                        if (binding.viewFlipperPages.displayedChild == 3) loadNotificationPage()
+                    }
+                    .setNegativeButton("Tutup", null)
+                    .show()
+            } else {
+                switchTab(3)
+            }
         }
 
         // Tombol Pindah Bulan Kalender (November <-> Desember 2026)
@@ -180,7 +203,7 @@ class MainActivity : AppCompatActivity() {
         // Menggunakan ViewCompat agar aman untuk semua versi Android (bebas error API 21!)
         ViewCompat.setBackgroundTintList(binding.layoutBottomNavContainer, ColorStateList.valueOf(if (isDark) Color.parseColor("#1E293B") else Color.WHITE))
 
-        selectDayDashboard("Senin", binding.btnDaySenin)
+        selectDayDashboard(activeDashDay, getDashButtonForDay(activeDashDay))
         when (binding.viewFlipperPages.displayedChild) {
             1 -> loadScheduleForDay(activeDaySchedule, getButtonForDay(activeDaySchedule))
             2 -> loadCalendarPage()
@@ -203,6 +226,16 @@ class MainActivity : AppCompatActivity() {
             "Kamis" -> binding.btnSchedKamis
             "Jumat" -> binding.btnSchedJumat
             else -> binding.btnSchedSenin
+        }
+    }
+
+    private fun getDashButtonForDay(day: String): Button {
+        return when (day) {
+            "Selasa" -> binding.btnDaySelasa
+            "Rabu" -> binding.btnDayRabu
+            "Kamis" -> binding.btnDayKamis
+            "Jumat" -> binding.btnDayJumat
+            else -> binding.btnDaySenin
         }
     }
 
@@ -237,6 +270,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun selectDayDashboard(hari: String, selectedBtn: Button) {
+        activeDashDay = hari
         val isDark = session.isDarkMode()
         for (btn in dayButtonsDash) {
             ViewCompat.setBackgroundTintList(btn, ColorStateList.valueOf(if (isDark) Color.parseColor("#1F2937") else Color.WHITE))
