@@ -174,9 +174,9 @@
                         android:orientation="horizontal"
                         android:weightSum="3">
 
-                        <Button android:id="@+id/btnTimer5" android:layout_width="0dp" android:layout_height="42dp" android:layout_weight="1" android:layout_marginEnd="4dp" android:backgroundTint="#F8FAFC" android:text="5 Menit" android:textColor="@color/text_primary" android:textSize="11sp" />
-                        <Button android:id="@+id/btnTimer10" android:layout_width="0dp" android:layout_height="42dp" android:layout_weight="1" android:layout_marginHorizontal="4dp" android:backgroundTint="@color/telkom_red" android:text="10 Menit" android:textColor="@color/white" android:textSize="11sp" android:textStyle="bold" />
-                        <Button android:id="@+id/btnTimer15" android:layout_width="0dp" android:layout_height="42dp" android:layout_weight="1" android:layout_marginStart="4dp" android:backgroundTint="#F8FAFC" android:text="15 Menit" android:textColor="@color/text_primary" android:textSize="11sp" />
+                        <Button android:id="@+id/btnTimer5" android:layout_width="0dp" android:layout_height="42dp" app:cornerRadius="12dp" android:layout_weight="1" android:layout_marginEnd="4dp" android:backgroundTint="#F8FAFC" android:text="5 Menit" android:textColor="@color/text_primary" android:textSize="11sp" />
+                        <Button android:id="@+id/btnTimer10" android:layout_width="0dp" android:layout_height="42dp" app:cornerRadius="12dp" android:layout_weight="1" android:layout_marginHorizontal="4dp" android:backgroundTint="@color/telkom_red" android:text="10 Menit" android:textColor="@color/white" android:textSize="11sp" android:textStyle="bold" />
+                        <Button android:id="@+id/btnTimer15" android:layout_width="0dp" android:layout_height="42dp" app:cornerRadius="12dp" android:layout_weight="1" android:layout_marginStart="4dp" android:backgroundTint="#F8FAFC" android:text="15 Menit" android:textColor="@color/text_primary" android:textSize="11sp" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -188,6 +188,7 @@
                 android:layout_marginTop="36dp"
                 android:layout_marginBottom="24dp"
                 android:backgroundTint="@color/telkom_red"
+                app:cornerRadius="14dp"
                 android:text="✓  Tersimpan!"
                 android:textColor="@color/white"
                 android:textSize="15sp"

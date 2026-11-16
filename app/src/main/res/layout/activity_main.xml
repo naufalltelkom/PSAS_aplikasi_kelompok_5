@@ -148,7 +148,7 @@
                                         android:id="@+id/tvStudentClassBadge"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:background="#40FFFFFF"
+                                        android:background="@drawable/bg_chip_glass"
                                         android:paddingHorizontal="8dp"
                                         android:paddingVertical="2dp"
                                         android:text="XI PPLG 4"
@@ -187,11 +187,11 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <Button android:id="@+id/btnDaySenin" android:layout_width="wrap_content" android:layout_height="36dp" android:backgroundTint="@color/telkom_red" android:text="Senin" android:textColor="@color/white" android:textSize="11sp" />
-                            <Button android:id="@+id/btnDaySelasa" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginStart="6dp" android:backgroundTint="@color/white" android:text="Selasa" android:textColor="@color/text_primary" android:textSize="11sp" />
-                            <Button android:id="@+id/btnDayRabu" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginStart="6dp" android:backgroundTint="@color/white" android:text="Rabu" android:textColor="@color/text_primary" android:textSize="11sp" />
-                            <Button android:id="@+id/btnDayKamis" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginStart="6dp" android:backgroundTint="@color/white" android:text="Kamis" android:textColor="@color/text_primary" android:textSize="11sp" />
-                            <Button android:id="@+id/btnDayJumat" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginStart="6dp" android:backgroundTint="@color/white" android:text="Jumat" android:textColor="@color/text_primary" android:textSize="11sp" />
+                            <Button android:id="@+id/btnDaySenin" android:layout_width="wrap_content" android:layout_height="40dp" app:cornerRadius="20dp" android:insetTop="2dp" android:insetBottom="2dp" android:backgroundTint="@color/telkom_red" android:text="Senin" android:textColor="@color/white" android:textSize="11sp" />
+                            <Button android:id="@+id/btnDaySelasa" android:layout_width="wrap_content" android:layout_height="40dp" app:cornerRadius="20dp" android:insetTop="2dp" android:insetBottom="2dp" android:layout_marginStart="6dp" android:backgroundTint="@color/white" android:text="Selasa" android:textColor="@color/text_primary" android:textSize="11sp" />
+                            <Button android:id="@+id/btnDayRabu" android:layout_width="wrap_content" android:layout_height="40dp" app:cornerRadius="20dp" android:insetTop="2dp" android:insetBottom="2dp" android:layout_marginStart="6dp" android:backgroundTint="@color/white" android:text="Rabu" android:textColor="@color/text_primary" android:textSize="11sp" />
+                            <Button android:id="@+id/btnDayKamis" android:layout_width="wrap_content" android:layout_height="40dp" app:cornerRadius="20dp" android:insetTop="2dp" android:insetBottom="2dp" android:layout_marginStart="6dp" android:backgroundTint="@color/white" android:text="Kamis" android:textColor="@color/text_primary" android:textSize="11sp" />
+                            <Button android:id="@+id/btnDayJumat" android:layout_width="wrap_content" android:layout_height="40dp" app:cornerRadius="20dp" android:insetTop="2dp" android:insetBottom="2dp" android:layout_marginStart="6dp" android:backgroundTint="@color/white" android:text="Jumat" android:textColor="@color/text_primary" android:textSize="11sp" />
                         </LinearLayout>
                     </HorizontalScrollView>
 
@@ -348,11 +348,11 @@
                         <!-- PILIHAN HARI UNTUK FILTER 1 HARI SAJA -->
                         <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:scrollbars="none">
                             <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="horizontal">
-                                <Button android:id="@+id/btnSchedSenin" android:layout_width="wrap_content" android:layout_height="36dp" android:backgroundTint="@color/white" android:text="• Senin" android:textColor="@color/telkom_red" android:textStyle="bold" android:textSize="11sp" />
-                                <Button android:id="@+id/btnSchedSelasa" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginStart="6dp" android:backgroundTint="#40FFFFFF" android:text="Selasa" android:textColor="@color/white" android:textSize="11sp" />
-                                <Button android:id="@+id/btnSchedRabu" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginStart="6dp" android:backgroundTint="#40FFFFFF" android:text="Rabu" android:textColor="@color/white" android:textSize="11sp" />
-                                <Button android:id="@+id/btnSchedKamis" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginStart="6dp" android:backgroundTint="#40FFFFFF" android:text="Kamis" android:textColor="@color/white" android:textSize="11sp" />
-                                <Button android:id="@+id/btnSchedJumat" android:layout_width="wrap_content" android:layout_height="36dp" android:layout_marginStart="6dp" android:backgroundTint="#40FFFFFF" android:text="Jumat" android:textColor="@color/white" android:textSize="11sp" />
+                                <Button android:id="@+id/btnSchedSenin" android:layout_width="wrap_content" android:layout_height="40dp" app:cornerRadius="20dp" android:insetTop="2dp" android:insetBottom="2dp" android:backgroundTint="@color/white" android:text="• Senin" android:textColor="@color/telkom_red" android:textStyle="bold" android:textSize="11sp" />
+                                <Button android:id="@+id/btnSchedSelasa" android:layout_width="wrap_content" android:layout_height="40dp" app:cornerRadius="20dp" android:insetTop="2dp" android:insetBottom="2dp" android:layout_marginStart="6dp" android:backgroundTint="#40FFFFFF" android:text="Selasa" android:textColor="@color/white" android:textSize="11sp" />
+                                <Button android:id="@+id/btnSchedRabu" android:layout_width="wrap_content" android:layout_height="40dp" app:cornerRadius="20dp" android:insetTop="2dp" android:insetBottom="2dp" android:layout_marginStart="6dp" android:backgroundTint="#40FFFFFF" android:text="Rabu" android:textColor="@color/white" android:textSize="11sp" />
+                                <Button android:id="@+id/btnSchedKamis" android:layout_width="wrap_content" android:layout_height="40dp" app:cornerRadius="20dp" android:insetTop="2dp" android:insetBottom="2dp" android:layout_marginStart="6dp" android:backgroundTint="#40FFFFFF" android:text="Kamis" android:textColor="@color/white" android:textSize="11sp" />
+                                <Button android:id="@+id/btnSchedJumat" android:layout_width="wrap_content" android:layout_height="40dp" app:cornerRadius="20dp" android:insetTop="2dp" android:insetBottom="2dp" android:layout_marginStart="6dp" android:backgroundTint="#40FFFFFF" android:text="Jumat" android:textColor="@color/white" android:textSize="11sp" />
                             </LinearLayout>
                         </HorizontalScrollView>
                     </LinearLayout>
@@ -463,9 +463,9 @@
 
                         <!-- FILTER CHIPS INTERAKTIF: SEMUA, AKADEMIK, RUANGAN -->
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:orientation="horizontal">
-                            <TextView android:id="@+id/btnFilterNotifSemua" android:layout_width="wrap_content" android:layout_height="32dp" android:background="@color/white" android:paddingHorizontal="14dp" android:gravity="center" android:text="Semua" android:textColor="@color/telkom_red" android:textStyle="bold" android:textSize="11sp" />
-                            <TextView android:id="@+id/btnFilterNotifAkademik" android:layout_width="wrap_content" android:layout_height="32dp" android:layout_marginStart="8dp" android:background="#40FFFFFF" android:paddingHorizontal="14dp" android:gravity="center" android:text="Akademik" android:textColor="@color/white" android:textSize="11sp" />
-                            <TextView android:id="@+id/btnFilterNotifRuangan" android:layout_width="wrap_content" android:layout_height="32dp" android:layout_marginStart="8dp" android:background="#40FFFFFF" android:paddingHorizontal="14dp" android:gravity="center" android:text="Ruangan" android:textColor="@color/white" android:textSize="11sp" />
+                            <TextView android:id="@+id/btnFilterNotifSemua" android:layout_width="wrap_content" android:layout_height="32dp" android:background="@drawable/bg_chip_white" android:paddingHorizontal="14dp" android:gravity="center" android:text="Semua" android:textColor="@color/telkom_red" android:textStyle="bold" android:textSize="11sp" />
+                            <TextView android:id="@+id/btnFilterNotifAkademik" android:layout_width="wrap_content" android:layout_height="32dp" android:layout_marginStart="8dp" android:background="@drawable/bg_chip_glass" android:paddingHorizontal="14dp" android:gravity="center" android:text="Akademik" android:textColor="@color/white" android:textSize="11sp" />
+                            <TextView android:id="@+id/btnFilterNotifRuangan" android:layout_width="wrap_content" android:layout_height="32dp" android:layout_marginStart="8dp" android:background="@drawable/bg_chip_glass" android:paddingHorizontal="14dp" android:gravity="center" android:text="Ruangan" android:textColor="@color/white" android:textSize="11sp" />
                         </LinearLayout>
                     </LinearLayout>
                 </FrameLayout>
@@ -519,8 +519,29 @@
                         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:background="@color/white" android:padding="18dp" android:orientation="vertical">
                             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="DETAIL AKUN &amp; AKADEMIK" android:textColor="@color/text_secondary" android:textStyle="bold" android:textSize="11sp" />
                             <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginVertical="10dp" android:background="#F1F5F9" />
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Konsentrasi Keahlian:\nPengembangan Perangkat Lunak dan Gim (PPLG)" android:textColor="@color/text_primary" android:textStyle="bold" android:textSize="13sp" />
-                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="Kelas &amp; Wali Kelas:\nXI PPLG 4 • Wali Kelas: Bu Firda" android:textColor="@color/text_secondary" android:textSize="12sp" />
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                                <TextView android:layout_width="36dp" android:layout_height="36dp" android:background="@drawable/bg_badge_official" android:gravity="center" android:text="💻" android:textSize="16sp" />
+                                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:orientation="vertical">
+                                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Konsentrasi Keahlian" android:textColor="@color/text_secondary" android:textSize="11sp" />
+                                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Pengembangan Perangkat Lunak dan Gim (PPLG)" android:textColor="@color/text_primary" android:textStyle="bold" android:textSize="13sp" />
+                                </LinearLayout>
+                            </LinearLayout>
+                            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginVertical="10dp" android:background="#F1F5F9" />
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                                <TextView android:layout_width="36dp" android:layout_height="36dp" android:background="@drawable/bg_badge_official" android:gravity="center" android:text="🏫" android:textSize="16sp" />
+                                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:orientation="vertical">
+                                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Kelas" android:textColor="@color/text_secondary" android:textSize="11sp" />
+                                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="XI PPLG 4" android:textColor="@color/text_primary" android:textStyle="bold" android:textSize="13sp" />
+                                </LinearLayout>
+                            </LinearLayout>
+                            <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginVertical="10dp" android:background="#F1F5F9" />
+                            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                                <TextView android:layout_width="36dp" android:layout_height="36dp" android:background="@drawable/bg_badge_official" android:gravity="center" android:text="👩‍🏫" android:textSize="16sp" />
+                                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:layout_weight="1" android:orientation="vertical">
+                                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Wali Kelas" android:textColor="@color/text_secondary" android:textSize="11sp" />
+                                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bu Firda" android:textColor="@color/text_primary" android:textStyle="bold" android:textSize="13sp" />
+                                </LinearLayout>
+                            </LinearLayout>
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
@@ -532,7 +553,7 @@
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
 
-                    <Button android:id="@+id/btnLogout" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="24dp" android:layout_marginBottom="24dp" android:backgroundTint="@color/telkom_red" android:text="🚪  Keluar Akun" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" />
+                    <Button android:id="@+id/btnLogout" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="24dp" android:layout_marginBottom="24dp" android:backgroundTint="@color/telkom_red" app:cornerRadius="14dp" android:text="🚪  Keluar Akun" android:textColor="@color/white" android:textSize="15sp" android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

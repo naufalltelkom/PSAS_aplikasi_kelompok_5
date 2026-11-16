@@ -10,6 +10,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
@@ -333,15 +334,15 @@ class MainActivity : AppCompatActivity() {
 
             if (isMomentum) {
                 tvBadgeStatus.text = "MOMENTUM"
-                tvBadgeStatus.setBackgroundColor(Color.parseColor("#EA580C"))
+                tvBadgeStatus.background = roundedBg(Color.parseColor("#EA580C"), 10f)
                 tvBadgeStatus.setTextColor(Color.WHITE)
             } else if (index == 0) {
                 tvBadgeStatus.text = "SEDANG BERLANGSUNG"
-                tvBadgeStatus.setBackgroundColor(Color.parseColor("#DCFCE7"))
+                tvBadgeStatus.background = roundedBg(Color.parseColor("#DCFCE7"), 10f)
                 tvBadgeStatus.setTextColor(Color.parseColor("#059669"))
             } else {
                 tvBadgeStatus.text = "AKAN DATANG"
-                tvBadgeStatus.setBackgroundColor(Color.parseColor(if (isDark) "#334155" else "#F1F5F9"))
+                tvBadgeStatus.background = roundedBg(Color.parseColor(if (isDark) "#334155" else "#F1F5F9"), 10f)
                 tvBadgeStatus.setTextColor(Color.parseColor(if (isDark) "#CBD5E1" else "#64748B"))
             }
 
@@ -376,7 +377,7 @@ class MainActivity : AppCompatActivity() {
 
             for (col in 0..6) {
                 val cell = TextView(this).apply {
-                    layoutParams = LinearLayout.LayoutParams(0, 96, 1f)
+                    layoutParams = LinearLayout.LayoutParams(0, 96, 1f).apply { setMargins(4, 4, 4, 4) }
                     gravity = Gravity.CENTER
                     textSize = 13f
                 }
@@ -387,19 +388,24 @@ class MainActivity : AppCompatActivity() {
                     cell.text = dayCounter.toString()
                     cell.setTextColor(if (col == 6) Color.parseColor("#DC2626") else if (isDark) Color.WHITE else Color.parseColor("#0F172A"))
 
-                    if (currentCalendarMonth == 11 && (dayCounter == 5 || dayCounter == 6)) {
-                        cell.setBackgroundColor(Color.parseColor("#FEE2E2"))
+                    if (currentCalendarMonth == 11 && dayCounter == 16) {
+                        // Hari ini: lingkaran merah penuh seperti mockup
+                        cell.background = roundedBg(Color.parseColor("#DC2626"), 14f)
+                        cell.setTextColor(Color.WHITE)
+                        cell.paint.isFakeBoldText = true
+                    } else if (currentCalendarMonth == 11 && (dayCounter == 5 || dayCounter == 6)) {
+                        cell.background = roundedBg(Color.parseColor("#FEE2E2"), 14f)
                         cell.setTextColor(Color.parseColor("#DC2626"))
                         cell.paint.isFakeBoldText = true
                     } else if (currentCalendarMonth == 11 && dayCounter == 10) {
-                        cell.setBackgroundColor(Color.parseColor("#FEF3C7"))
+                        cell.background = roundedBg(Color.parseColor("#FEF3C7"), 14f)
                         cell.setTextColor(Color.parseColor("#B45309"))
                         cell.paint.isFakeBoldText = true
                     } else if (currentCalendarMonth == 11 && dayCounter in 20..28) {
-                        cell.setBackgroundColor(Color.parseColor("#DBEAFE"))
+                        cell.background = roundedBg(Color.parseColor("#DBEAFE"), 14f)
                         cell.setTextColor(Color.parseColor("#1E40AF"))
                     } else if (currentCalendarMonth == 12 && dayCounter >= 20) {
-                        cell.setBackgroundColor(Color.parseColor("#DCFCE7"))
+                        cell.background = roundedBg(Color.parseColor("#DCFCE7"), 14f)
                         cell.setTextColor(Color.parseColor("#059669"))
                     }
                     dayCounter++
@@ -411,13 +417,21 @@ class MainActivity : AppCompatActivity() {
 
         val eventsContainer = binding.calendarEventsContainer
         eventsContainer.removeAllViews()
-        for (event in db.getEvents()) {
+        val accentColors = listOf("#DC2626", "#F59E0B", "#2563EB", "#059669")
+        for ((i, event) in db.getEvents().withIndex()) {
+            val accent = Color.parseColor(accentColors[i % accentColors.size])
             val tvEvent = TextView(this).apply {
-                text = "📅 ${event["nama"]}\nKategori: ${event["kategori"]} | Waktu: ${event["tanggal"]}"
+                text = "${event["nama"]}\n🏷️ ${event["kategori"]}   •   🗓️ ${event["tanggal"]}"
                 textSize = 13f
+                setLineSpacing(6f, 1f)
                 setTextColor(if (isDark) Color.WHITE else Color.parseColor("#0F172A"))
-                setPadding(32, 24, 32, 24)
-                setBackgroundColor(if (isDark) Color.parseColor("#1F2937") else Color.WHITE)
+                setPadding(40, 32, 32, 32)
+                // Kartu membulat dengan garis aksen di sisi kiri (gaya agenda di mockup)
+                val card = roundedBg(if (isDark) Color.parseColor("#1F2937") else Color.WHITE, 16f, if (isDark) Color.parseColor("#334155") else Color.parseColor("#E2E8F0"))
+                val stripe = roundedBg(accent, 16f)
+                background = android.graphics.drawable.LayerDrawable(arrayOf(stripe, card)).apply {
+                    setLayerInset(1, (5 * resources.displayMetrics.density).toInt(), 0, 0, 0)
+                }
                 ViewCompat.setElevation(this, 2f)
                 val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                 params.setMargins(0, 0, 0, 14)
@@ -430,11 +444,22 @@ class MainActivity : AppCompatActivity() {
     private fun updateNotifFilterChips(activeBtn: TextView) {
         val chips = listOf(binding.btnFilterNotifSemua, binding.btnFilterNotifAkademik, binding.btnFilterNotifRuangan)
         for (c in chips) {
-            c.setBackgroundColor(Color.parseColor("#40FFFFFF"))
+            c.setBackgroundResource(R.drawable.bg_chip_glass)
             c.setTextColor(Color.WHITE)
         }
-        activeBtn.setBackgroundColor(Color.WHITE)
+        activeBtn.setBackgroundResource(R.drawable.bg_chip_white)
         activeBtn.setTextColor(Color.parseColor("#DC2626"))
+    }
+
+    // Helper: latar belakang sudut membulat (gaya kartu/pill seperti mockup)
+    private fun roundedBg(fillColor: Int, radiusDp: Float, strokeColor: Int? = null): GradientDrawable {
+        val density = resources.displayMetrics.density
+        return GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = radiusDp * density
+            setColor(fillColor)
+            if (strokeColor != null) setStroke((1 * density).toInt(), strokeColor)
+        }
     }
 
     private fun loadNotificationPage() {
