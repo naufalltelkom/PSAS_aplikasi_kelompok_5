@@ -39,4 +39,10 @@ class SessionManager(context: Context) {
     fun logout() {
         prefs.edit().clear().apply()
     }
+
+    fun setDarkMode(isDark: Boolean) {
+        prefs.edit().putBoolean("isDarkMode", isDark).apply()
+    }
+
+    fun isDarkMode(): Boolean = prefs.getBoolean("isDarkMode", false)
 }

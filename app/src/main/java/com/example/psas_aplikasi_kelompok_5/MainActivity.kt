@@ -8,16 +8,13 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.view.MotionEvent
+import android.view.Gravity
 import android.view.View
-import android.view.animation.OvershootInterpolator
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -26,20 +23,19 @@ import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import com.example.psas_aplikasi_kelompok_5.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var session: SessionManager
     private lateinit var db: AppDatabase
-    private lateinit var dayButtons: List<Button>
+    private lateinit var dayButtonsDash: List<Button>
+    private lateinit var dayButtonsSched: List<Button>
 
-    private val timetableCardViews = mutableListOf<CardView>()
-    private var activeReminderTitle = "Pengingat Pergantian Jam (XI PPLG 4)"
-    private var activeReminderMessage = "10 Menit lagi: Mapel Pilihan 1B selesai. Bersiap menuju sesi MK1 (Pak Fendi)!"
-    private var timerMinutes = 10
-    private var currentTabIndex = 0
-    private var dX = 0f
+    private var currentCalendarMonth = 11 // 11 = November 2026, 12 = Desember 2026
+    private var currentNotifFilter = "Semua"
+    private var activeDaySchedule = "Senin"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,16 +45,13 @@ class MainActivity : AppCompatActivity() {
         session = SessionManager(this)
         db = AppDatabase(this)
 
-        // Set Informasi Siswa Sesuai Konsep Desain Baru
+        // Set Profil Siswa Sesuai Akun Login
         binding.tvStudentName.text = session.getSiswaNama()
-        binding.tvStudentClass.text = "PPLG • " + session.getKelasNama()
         binding.tvProfileName.text = session.getSiswaNama()
-        binding.tvProfileClass.text = "NIS: 20261104 • " + session.getRole()
+        binding.tvStudentClassBadge.text = session.getKelasNama()
+        binding.tvScheduleHeaderClass.text = "Kelas " + session.getKelasNama()
 
-        // 1. Background Jernih Murni (Akun Opet -> bg_opet, lainnya -> gedung_telkom)
-        setupCustomUserBackground()
-
-        // 2. Foto Profil Opet (Rafasyah)
+        // Foto Khusus Akun Opet (Rafasyah)
         val isOpetAccount = session.getSiswaNama().contains("Rafasyah", ignoreCase = true) || session.getUsername().lowercase().contains("opet")
         if (isOpetAccount) {
             val fotoOpetResId = resources.getIdentifier("foto_opet", "drawable", packageName)
@@ -68,22 +61,22 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Pilihan Hari
-        dayButtons = listOf(
-            binding.btnDaySenin,
-            binding.btnDaySelasa,
-            binding.btnDayRabu,
-            binding.btnDayKamis,
-            binding.btnDayJumat
-        )
+        // 1. Selector Hari Dashboard
+        dayButtonsDash = listOf(binding.btnDaySenin, binding.btnDaySelasa, binding.btnDayRabu, binding.btnDayKamis, binding.btnDayJumat)
+        binding.btnDaySenin.setOnClickListener { selectDayDashboard("Senin", binding.btnDaySenin) }
+        binding.btnDaySelasa.setOnClickListener { selectDayDashboard("Selasa", binding.btnDaySelasa) }
+        binding.btnDayRabu.setOnClickListener { selectDayDashboard("Rabu", binding.btnDayRabu) }
+        binding.btnDayKamis.setOnClickListener { selectDayDashboard("Kamis", binding.btnDayKamis) }
+        binding.btnDayJumat.setOnClickListener { selectDayDashboard("Jumat", binding.btnDayJumat) }
+        selectDayDashboard("Senin", binding.btnDaySenin)
 
-        binding.btnDaySenin.setOnClickListener { selectDay("Senin", binding.btnDaySenin) }
-        binding.btnDaySelasa.setOnClickListener { selectDay("Selasa", binding.btnDaySelasa) }
-        binding.btnDayRabu.setOnClickListener { selectDay("Rabu", binding.btnDayRabu) }
-        binding.btnDayKamis.setOnClickListener { selectDay("Kamis", binding.btnDayKamis) }
-        binding.btnDayJumat.setOnClickListener { selectDay("Jumat", binding.btnDayJumat) }
-
-        selectDay("Senin", binding.btnDaySenin)
+        // 2. Selector Hari Khusus Halaman Jadwal (Menampilkan 1 Hari Saja)
+        dayButtonsSched = listOf(binding.btnSchedSenin, binding.btnSchedSelasa, binding.btnSchedRabu, binding.btnSchedKamis, binding.btnSchedJumat)
+        binding.btnSchedSenin.setOnClickListener { loadScheduleForDay("Senin", binding.btnSchedSenin) }
+        binding.btnSchedSelasa.setOnClickListener { loadScheduleForDay("Selasa", binding.btnSchedSelasa) }
+        binding.btnSchedRabu.setOnClickListener { loadScheduleForDay("Rabu", binding.btnSchedRabu) }
+        binding.btnSchedKamis.setOnClickListener { loadScheduleForDay("Kamis", binding.btnSchedKamis) }
+        binding.btnSchedJumat.setOnClickListener { loadScheduleForDay("Jumat", binding.btnSchedJumat) }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
@@ -91,73 +84,62 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Cek Jadwal Momentum
+        // Cek Momentum Perubahan Jadwal
         val latestMomentum = db.getLatestMomentum()
         if (latestMomentum != null) {
-            val mapelBaru = latestMomentum["mapel_baru"] ?: ""
-            val guruBaru = latestMomentum["guru_baru"] ?: ""
-            val ruangBaru = latestMomentum["ruang_baru"] ?: ""
-            val alasan = latestMomentum["alasan"] ?: ""
+            val title = "Perubahan Ruangan: " + latestMomentum["mapel_baru"] + "! 🔴"
+            binding.tvMomentumTitle.text = title
+            showNotification(102, title, "Ruang baru: " + latestMomentum["ruang_baru"] + " (" + latestMomentum["alasan"] + ")")
+        }
 
-            val titleMomentum = "⚡ PERUBAHAN JADWAL: $mapelBaru"
-            val descMomentum = "Pindah ke $ruangBaru bersama $guruBaru. Keterangan: $alasan"
+        // Klik Card Notifikasi / Lonceng Momentum di Dashboard -> Langsung Pindah ke Halaman Notifikasi
+        binding.cardNotifMomentum.setOnClickListener {
+            switchTab(3)
+        }
 
-            binding.tvMomentumTitle.text = titleMomentum
-            showNotification(102, titleMomentum, descMomentum)
+        // Tombol Pindah Bulan Kalender (November <-> Desember 2026)
+        binding.btnPrevMonth.setOnClickListener {
+            currentCalendarMonth = 11
+            loadCalendarPage()
+        }
+        binding.btnNextMonth.setOnClickListener {
+            currentCalendarMonth = 12
+            loadCalendarPage()
+        }
 
-            binding.cardNotifMomentum.setOnClickListener {
-                AlertDialog.Builder(this)
-                    .setTitle(titleMomentum)
-                    .setMessage("Mata Pelajaran: $mapelBaru\nGuru Pengganti: $guruBaru\nRuangan: $ruangBaru\nKeterangan Kurikulum: $alasan\n\nApakah sesi pergantian ini sudah selesai dan ingin mengembalikan jadwal ke semula?")
-                    .setPositiveButton("Ya, Saya Mengerti (Kembalikan Normal)") { _, _ ->
-                        db.clearMomentum()
-                        binding.tvMomentumTitle.text = "Pembaruan Jadwal Momentum"
-                        Toast.makeText(this, "Jadwal telah berhasil dikembalikan ke jadwal semula!", Toast.LENGTH_LONG).show()
-                        selectDay("Senin", binding.btnDaySenin)
-                    }
-                    .setNegativeButton("Tetap Gunakan Jadwal Ini", null)
-                    .show()
+        // Filter Halaman Notifikasi (Semua / Akademik / Ruangan)
+        binding.btnFilterNotifSemua.setOnClickListener {
+            currentNotifFilter = "Semua"
+            updateNotifFilterChips(binding.btnFilterNotifSemua)
+            loadNotificationPage()
+        }
+        binding.btnFilterNotifAkademik.setOnClickListener {
+            currentNotifFilter = "Akademik"
+            updateNotifFilterChips(binding.btnFilterNotifAkademik)
+            loadNotificationPage()
+        }
+        binding.btnFilterNotifRuangan.setOnClickListener {
+            currentNotifFilter = "Ruangan"
+            updateNotifFilterChips(binding.btnFilterNotifRuangan)
+            loadNotificationPage()
+        }
+
+        binding.btnOpenSettingsFromProfile.setOnClickListener { startActivity(Intent(this, SettingsActivity::class.java)) }
+        binding.btnLihatSemuaKalender.setOnClickListener { switchTab(2) }
+        binding.fabAddEventCalendar.setOnClickListener {
+            if (session.getRole().contains("Admin", ignoreCase = true)) {
+                startActivity(Intent(this, AdminActivity::class.java))
+            } else {
+                Toast.makeText(this, "Hanya Akun Admin/OSIS yang berwenang menambah event!", Toast.LENGTH_SHORT).show()
             }
         }
 
-        binding.btnHeaderBell.setOnClickListener {
-            showNotification(101, activeReminderTitle, activeReminderMessage)
-            Toast.makeText(this, "Notifikasi pengingat jam dikirim!", Toast.LENGTH_SHORT).show()
-        }
-
-        binding.btnSetTimer.setOnClickListener {
-            val timerOptions = arrayOf("10 Menit Sebelum", "15 Menit Sebelum", "20 Menit Sebelum", "30 Menit Sebelum")
-            val minutesArray = arrayOf(10, 15, 20, 30)
-
-            AlertDialog.Builder(this)
-                .setTitle("Atur Waktu Pengingat Pergantian Jam")
-                .setItems(timerOptions) { _, which ->
-                    timerMinutes = minutesArray[which]
-                    binding.btnSetTimer.text = "⏱️ ${timerMinutes} Mnt"
-                    Toast.makeText(this, "Pengingat diatur: $timerMinutes menit sebelum sesi berganti", Toast.LENGTH_LONG).show()
-
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        showNotification(101, activeReminderTitle, "[Pengingat $timerMinutes Menit] $activeReminderMessage")
-                    }, 3000)
-                }
-                .show()
-        }
-
-        binding.cardNotifPergantianJam.setOnClickListener {
-            switchTab(1)
-        }
-
-        setupLiquidTouchGesture()
-
+        // Navigasi Bottom Navbar
         binding.tabHome.setOnClickListener { switchTab(0) }
-        binding.tabSchedule.setOnClickListener { switchTab(1) }
         binding.tabCalendar.setOnClickListener { switchTab(2) }
+        binding.tabSchedule.setOnClickListener { switchTab(1) }
         binding.tabNotif.setOnClickListener { switchTab(3) }
         binding.tabProfile.setOnClickListener { switchTab(4) }
-
-        binding.root.post {
-            animateLiquidBubbleTo(0, animate = false)
-        }
 
         binding.btnLogout.setOnClickListener {
             session.logout()
@@ -166,394 +148,310 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupCustomUserBackground() {
-        try {
-            val username = session.getUsername().lowercase()
-            val bgImageView = findViewById<ImageView>(R.id.ivCustomUserBackground) ?: return
+    override fun onResume() {
+        super.onResume()
+        applyGlobalAppTheme()
+    }
 
-            val customBgName = when {
-                username.contains("opet") || session.getSiswaNama().contains("Rafasyah", ignoreCase = true) -> "bg_opet"
-                username.contains("naufal") -> "bg_naufal"
-                username.contains("abel") -> "bg_abel"
-                else -> "gedung_telkom"
-            }
+    // =========================================================================
+    // LOGIKA TEMA PRESISI (ANTI-SALAH WARNA TEXT HEADER & CARD!)
+    // =========================================================================
+    private fun applyGlobalAppTheme() {
+        val isDark = session.isDarkMode()
 
-            val customResId = resources.getIdentifier(customBgName, "drawable", packageName)
-            if (customResId != 0) {
-                bgImageView.setImageResource(customResId)
-            } else {
-                bgImageView.setImageResource(R.drawable.gedung_telkom)
-            }
+        val bgMainColor = if (isDark) Color.parseColor("#111827") else Color.parseColor("#EEF2F6")
+        val cardBgColor = if (isDark) Color.parseColor("#1F2937") else Color.WHITE
+        val textTitleColor = if (isDark) Color.WHITE else Color.parseColor("#0F172A")
+        val textSubColor = if (isDark) Color.parseColor("#CBD5E1") else Color.parseColor("#64748B")
 
-            bgImageView.alpha = 1.0f
+        binding.rootMainLayout.setBackgroundColor(bgMainColor)
 
-        } catch (e: Exception) {
-            e.printStackTrace()
+        binding.tvCurrentSubjectTitle.setTextColor(textTitleColor)
+        binding.tvCurrentTeacher.setTextColor(textSubColor)
+        binding.tvMomentumTitle.setTextColor(textTitleColor)
+
+        setCardBackgroundSafe(binding.cardNotifMomentum, if (isDark) Color.parseColor("#3B1F24") else Color.parseColor("#FFF5F5"))
+        val parentCardSchedule = binding.tvCurrentSubjectTitle.parent?.parent as? CardView
+        parentCardSchedule?.let { setCardBackgroundSafe(it, cardBgColor) }
+
+        val parentCardCal = binding.btnLihatSemuaKalender.parent?.parent?.parent as? CardView
+        parentCardCal?.let { setCardBackgroundSafe(it, cardBgColor) }
+
+        // Menggunakan ViewCompat agar aman untuk semua versi Android (bebas error API 21!)
+        ViewCompat.setBackgroundTintList(binding.layoutBottomNavContainer, ColorStateList.valueOf(if (isDark) Color.parseColor("#1E293B") else Color.WHITE))
+
+        selectDayDashboard("Senin", binding.btnDaySenin)
+        when (binding.viewFlipperPages.displayedChild) {
+            1 -> loadScheduleForDay(activeDaySchedule, getButtonForDay(activeDaySchedule))
+            2 -> loadCalendarPage()
+            3 -> loadNotificationPage()
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private fun setupLiquidTouchGesture() {
-        binding.layoutBottomNavContainer.setOnTouchListener { view, event ->
-            val totalWidth = view.width.toFloat()
-            val tabWidth = totalWidth / 5f
-
-            when (event.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    dX = event.x - binding.viewLiquidBubble.x
-                    true
-                }
-                MotionEvent.ACTION_MOVE -> {
-                    var newX = event.x - dX
-                    val minX = 0f
-                    val maxX = totalWidth - binding.viewLiquidBubble.width
-                    if (newX < minX) newX = minX
-                    if (newX > maxX) newX = maxX
-                    binding.viewLiquidBubble.x = newX
-                    true
-                }
-                MotionEvent.ACTION_UP -> {
-                    val touchX = event.x
-                    val targetTab = (touchX / tabWidth).toInt().coerceIn(0, 4)
-                    switchTab(targetTab)
-                    true
-                }
-                else -> false
-            }
+    private fun setCardBackgroundSafe(card: CardView, color: Int) {
+        card.setCardBackgroundColor(color)
+        val child = card.getChildAt(0)
+        if (child is LinearLayout) {
+            child.setBackgroundColor(color)
         }
     }
 
-    private fun switchTab(targetIndex: Int) {
-        binding.viewFlipperPages.displayedChild = targetIndex
-        animateLiquidBubbleTo(targetIndex, animate = true)
-        currentTabIndex = targetIndex
-
-        if (targetIndex == 1) loadSchedulePage()
-        if (targetIndex == 2) loadCalendarPage()
-        if (targetIndex == 3) loadNotificationPage()
-    }
-
-    private fun animateLiquidBubbleTo(tabIndex: Int, animate: Boolean) {
-        val totalWidth = binding.layoutBottomNavContainer.width
-        if (totalWidth == 0) return
-
-        val tabWidth = totalWidth / 5f
-        val targetX = (tabWidth * tabIndex) + (tabWidth / 2f) - (binding.viewLiquidBubble.width / 2f)
-
-        if (animate) {
-            binding.viewLiquidBubble.animate()
-                .x(targetX)
-                .setDuration(320)
-                .setInterpolator(OvershootInterpolator(1.2f))
-                .start()
-        } else {
-            binding.viewLiquidBubble.x = targetX
-        }
-
-        val textViews = listOf(binding.textHome, binding.textSchedule, binding.textCalendar, binding.textNotif, binding.textProfile)
-        for ((i, tv) in textViews.withIndex()) {
-            if (i == tabIndex) {
-                tv.setTextColor(ContextCompat.getColor(this, R.color.white))
-                tv.paint.isFakeBoldText = true
-            } else {
-                tv.setTextColor(ContextCompat.getColor(this, R.color.text_secondary))
-                tv.paint.isFakeBoldText = false
-            }
+    private fun getButtonForDay(day: String): Button {
+        return when (day) {
+            "Selasa" -> binding.btnSchedSelasa
+            "Rabu" -> binding.btnSchedRabu
+            "Kamis" -> binding.btnSchedKamis
+            "Jumat" -> binding.btnSchedJumat
+            else -> binding.btnSchedSenin
         }
     }
 
-    private fun loadNotificationPage() {
-        val container = binding.layoutNotifHistoryContainer
-        container.removeAllViews()
+    private fun switchTab(pageIndex: Int) {
+        binding.viewFlipperPages.displayedChild = pageIndex
+        binding.fabAddEventCalendar.visibility = if (pageIndex == 2) View.VISIBLE else View.GONE
 
-        val itemStatus = layoutInflater.inflate(R.layout.item_single_lesson, container, false) as CardView
-        itemStatus.findViewById<TextView>(R.id.tvSingleSubject).text = "🟢 Semua Saluran Notifikasi Aktif"
-        itemStatus.findViewById<TextView>(R.id.tvSingleTime).text = "Terhubung Otomatis dengan Pengingat Jadwal"
-        itemStatus.findViewById<TextView>(R.id.tvSingleRoom).text = "Peringatan akan berbunyi di status bar saat pergantian jam tiba."
-        itemStatus.setCardBackgroundColor(Color.WHITE)
-        container.addView(itemStatus)
+        val allTabs = listOf(binding.tabHome, binding.tabCalendar, binding.tabSchedule, binding.tabNotif, binding.tabProfile)
+        val allTexts = listOf(binding.navTextHome, binding.navTextCalendar, binding.navTextSchedule, binding.navTextNotif, binding.navTextProfile)
 
-        val itemJam = layoutInflater.inflate(R.layout.item_single_lesson, container, false) as CardView
-        itemJam.findViewById<TextView>(R.id.tvSingleSubject).text = "🔔 " + activeReminderTitle
-        itemJam.findViewById<TextView>(R.id.tvSingleTime).text = "Waktu: $timerMinutes Menit Sebelum Sesi Berakhir"
-        itemJam.findViewById<TextView>(R.id.tvSingleRoom).text = activeReminderMessage
-        itemJam.setCardBackgroundColor(Color.parseColor("#FEF2F2"))
-        container.addView(itemJam)
+        for (i in allTabs.indices) {
+            allTabs[i].background = null
+            allTexts[i].setTextColor(Color.parseColor("#64748B"))
+            allTexts[i].paint.isFakeBoldText = false
+        }
 
-        val latestMomentum = db.getLatestMomentum()
-        if (latestMomentum != null) {
-            val itemMomentum = layoutInflater.inflate(R.layout.item_single_lesson, container, false) as CardView
-            itemMomentum.findViewById<TextView>(R.id.tvSingleSubject).text = "⚡ Perubahan Jadwal: " + latestMomentum["mapel_baru"]
-            itemMomentum.findViewById<TextView>(R.id.tvSingleTime).text = "Sesi Diperbarui secara Langsung"
-            itemMomentum.findViewById<TextView>(R.id.tvSingleRoom).text = "Ruang: " + latestMomentum["ruang_baru"] + " • " + latestMomentum["guru_baru"] + " (" + latestMomentum["alasan"] + ")"
-            itemMomentum.findViewById<View>(R.id.tvSingleBadgeMomentum).visibility = View.VISIBLE
-            itemMomentum.setCardBackgroundColor(Color.parseColor("#FFF7ED"))
-            container.addView(itemMomentum)
+        val activeTabIndex = when (pageIndex) {
+            0 -> 0
+            2 -> 1
+            1 -> 2
+            3 -> 3
+            else -> 4
+        }
+
+        allTabs[activeTabIndex].setBackgroundResource(R.drawable.bg_nav_active_pill)
+        allTexts[activeTabIndex].setTextColor(Color.parseColor("#DC2626"))
+        allTexts[activeTabIndex].paint.isFakeBoldText = true
+
+        if (pageIndex == 1) loadScheduleForDay(activeDaySchedule, getButtonForDay(activeDaySchedule))
+        if (pageIndex == 2) loadCalendarPage()
+        if (pageIndex == 3) loadNotificationPage()
+    }
+
+    private fun selectDayDashboard(hari: String, selectedBtn: Button) {
+        val isDark = session.isDarkMode()
+        for (btn in dayButtonsDash) {
+            ViewCompat.setBackgroundTintList(btn, ColorStateList.valueOf(if (isDark) Color.parseColor("#1F2937") else Color.WHITE))
+            btn.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#0F172A"))
+        }
+        ViewCompat.setBackgroundTintList(selectedBtn, ColorStateList.valueOf(if (isDark) Color.parseColor("#7F1D1D") else Color.parseColor("#DC2626")))
+        selectedBtn.setTextColor(Color.WHITE)
+
+        val daily = db.getScheduleByClass(session.getKelasId()).filter { it["mapel"]?.contains("[$hari]") == true }
+        if (daily.isNotEmpty()) {
+            val p1 = daily[0]
+            binding.tvCurrentSubjectTitle.text = p1["mapel"]?.replace("[$hari] ", "")
+            binding.tvCurrentStatusTime.text = "🟢 " + p1["waktu"] + " WIB"
+            binding.tvCurrentTeacher.text = "👤 " + p1["guru"]
+            binding.tvCurrentRoomBadge.text = "🏢 " + p1["ruang"]
+            binding.tvNextPeriodPreview.text = if (daily.size > 1) "Berikutnya: ${daily[1]["mapel"]?.replace("[$hari] ", "")} (${daily[1]["waktu"]})" else "Sesi terakhir hari ini"
         }
     }
 
-    // MEMUAT JADWAL LENGKAP DENGAN PILAR HARI VERTIKAL (SKETSA TEMANMU)
-    private fun loadSchedulePage() {
+    private fun loadScheduleForDay(hari: String, selectedBtn: Button) {
+        activeDaySchedule = hari
+        val isDark = session.isDarkMode()
+
+        for (btn in dayButtonsSched) {
+            ViewCompat.setBackgroundTintList(btn, ColorStateList.valueOf(Color.parseColor("#40FFFFFF")))
+            btn.setTextColor(Color.WHITE)
+        }
+        ViewCompat.setBackgroundTintList(selectedBtn, ColorStateList.valueOf(Color.WHITE))
+        selectedBtn.setTextColor(Color.parseColor(if (isDark) "#7F1D1D" else "#DC2626"))
+
+        binding.tvSelectedDayLabel.text = "$hari Akademik"
+        binding.tvSelectedDayLabel.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#0F172A"))
+
         val container = binding.scheduleContainer
         container.removeAllViews()
 
-        val days = listOf("Senin", "Selasa", "Rabu", "Kamis", "Jumat")
-        val allSchedules = db.getScheduleByClass(session.getKelasId())
+        val daily = db.getScheduleByClass(session.getKelasId()).filter { it["mapel"]?.contains("[$hari]") == true }
 
-        for (dayName in days) {
-            val dailyLessons = allSchedules.filter { it["mapel"]?.contains("[$dayName]") == true }
-            if (dailyLessons.isEmpty()) continue
+        for ((index, item) in daily.withIndex()) {
+            val itemView = layoutInflater.inflate(R.layout.item_timeline_lesson, container, false)
+            val tvSubject = itemView.findViewById<TextView>(R.id.tvTimelineSubject)
+            val tvBadgeStatus = itemView.findViewById<TextView>(R.id.tvTimelineStatusBadge)
+            val tvTime = itemView.findViewById<TextView>(R.id.tvTimelineTime)
+            val tvTeacher = itemView.findViewById<TextView>(R.id.tvTimelineTeacher)
+            val tvRoom = itemView.findViewById<TextView>(R.id.tvTimelineRoom)
+            val card = itemView.findViewById<CardView>(R.id.cardTimelineLesson)
 
-            val dayGroupView = layoutInflater.inflate(R.layout.item_day_group, container, false)
-            val cardPillar = dayGroupView.findViewById<CardView>(R.id.cardDayPillar)
-            val tvVerticalDay = dayGroupView.findViewById<TextView>(R.id.tvVerticalDayName)
-            val cardsContainer = dayGroupView.findViewById<LinearLayout>(R.id.layoutDayCardsContainer)
+            card.setCardBackgroundColor(if (isDark) Color.parseColor("#1F2937") else Color.WHITE)
+            tvSubject.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#0F172A"))
+            tvTime.setTextColor(if (isDark) Color.parseColor("#CBD5E1") else Color.parseColor("#64748B"))
+            tvTeacher.setTextColor(if (isDark) Color.parseColor("#CBD5E1") else Color.parseColor("#64748B"))
 
-            val verticalLetters = dayName.uppercase().map { it.toString() }.joinToString("\n")
-            tvVerticalDay.text = verticalLetters
+            val fullMapel = item["mapel"]?.replace("[$hari] ", "") ?: ""
+            val isMomentum = item["isMomentum"] == "true"
 
-            when (dayName) {
-                "Senin" -> {
-                    cardPillar.setCardBackgroundColor(ContextCompat.getColor(this, R.color.bg_senin))
-                    tvVerticalDay.setTextColor(Color.WHITE)
-                }
-                "Selasa" -> {
-                    cardPillar.setCardBackgroundColor(ContextCompat.getColor(this, R.color.bg_selasa))
-                    tvVerticalDay.setTextColor(Color.BLACK)
-                }
-                "Rabu" -> {
-                    cardPillar.setCardBackgroundColor(ContextCompat.getColor(this, R.color.bg_rabu))
-                    tvVerticalDay.setTextColor(Color.BLACK)
-                }
-                "Kamis" -> {
-                    cardPillar.setCardBackgroundColor(ContextCompat.getColor(this, R.color.bg_kamis))
-                    tvVerticalDay.setTextColor(Color.WHITE)
-                }
-                "Jumat" -> {
-                    cardPillar.setCardBackgroundColor(ContextCompat.getColor(this, R.color.bg_jumat))
-                    tvVerticalDay.setTextColor(ContextCompat.getColor(this, R.color.text_cokelat_tua))
-                }
+            tvSubject.text = fullMapel
+            tvTime.text = "⏱️ " + item["waktu"] + " WIB"
+            tvTeacher.text = "Guru: " + item["guru"]
+            tvRoom.text = "RUANG " + item["ruang"]
+
+            if (isMomentum) {
+                tvBadgeStatus.text = "MOMENTUM"
+                tvBadgeStatus.setBackgroundColor(Color.parseColor("#EA580C"))
+                tvBadgeStatus.setTextColor(Color.WHITE)
+            } else if (index == 0) {
+                tvBadgeStatus.text = "SEDANG BERLANGSUNG"
+                tvBadgeStatus.setBackgroundColor(Color.parseColor("#DCFCE7"))
+                tvBadgeStatus.setTextColor(Color.parseColor("#059669"))
+            } else {
+                tvBadgeStatus.text = "AKAN DATANG"
+                tvBadgeStatus.setBackgroundColor(Color.parseColor(if (isDark) "#334155" else "#F1F5F9"))
+                tvBadgeStatus.setTextColor(Color.parseColor(if (isDark) "#CBD5E1" else "#64748B"))
             }
 
-            for (lesson in dailyLessons) {
-                val lessonCard = layoutInflater.inflate(R.layout.item_single_lesson, cardsContainer, false) as CardView
-                val tvSubject = lessonCard.findViewById<TextView>(R.id.tvSingleSubject)
-                val tvTime = lessonCard.findViewById<TextView>(R.id.tvSingleTime)
-                val tvRoom = lessonCard.findViewById<TextView>(R.id.tvSingleRoom)
-                val badgeMomentum = lessonCard.findViewById<TextView>(R.id.tvSingleBadgeMomentum)
-
-                val cleanMapel = lesson["mapel"]?.replace("[$dayName] ", "") ?: ""
-                val waktu = lesson["waktu"] ?: ""
-                val guru = lesson["guru"] ?: ""
-                val ruang = lesson["ruang"] ?: ""
-                val isMomentum = lesson["isMomentum"] == "true"
-
-                tvSubject.text = cleanMapel
-                tvTime.text = waktu
-                tvRoom.text = "Ruang: $ruang • $guru"
-
-                when (dayName) {
-                    "Senin" -> {
-                        lessonCard.setCardBackgroundColor(ContextCompat.getColor(this, R.color.bg_senin))
-                        tvSubject.setTextColor(Color.WHITE)
-                        tvTime.setTextColor(Color.WHITE)
-                        tvRoom.setTextColor(Color.WHITE)
-                    }
-                    "Selasa" -> {
-                        lessonCard.setCardBackgroundColor(ContextCompat.getColor(this, R.color.bg_selasa))
-                        tvSubject.setTextColor(Color.BLACK)
-                        tvTime.setTextColor(Color.BLACK)
-                        tvRoom.setTextColor(ContextCompat.getColor(this, R.color.text_secondary))
-                    }
-                    "Rabu" -> {
-                        lessonCard.setCardBackgroundColor(ContextCompat.getColor(this, R.color.bg_rabu))
-                        tvSubject.setTextColor(Color.BLACK)
-                        tvTime.setTextColor(Color.BLACK)
-                        tvRoom.setTextColor(ContextCompat.getColor(this, R.color.text_secondary))
-                    }
-                    "Kamis" -> {
-                        lessonCard.setCardBackgroundColor(ContextCompat.getColor(this, R.color.bg_kamis))
-                        tvSubject.setTextColor(Color.WHITE)
-                        tvTime.setTextColor(Color.WHITE)
-                        tvRoom.setTextColor(Color.WHITE)
-                    }
-                    "Jumat" -> {
-                        lessonCard.setCardBackgroundColor(ContextCompat.getColor(this, R.color.bg_jumat))
-                        tvSubject.setTextColor(ContextCompat.getColor(this, R.color.text_cokelat_tua))
-                        tvTime.setTextColor(ContextCompat.getColor(this, R.color.text_cokelat_tua))
-                        tvRoom.setTextColor(ContextCompat.getColor(this, R.color.text_cokelat_tua))
-                    }
-                }
-
-                if (isMomentum) badgeMomentum.visibility = View.VISIBLE else badgeMomentum.visibility = View.GONE
-
-                // POP-UP DIALOG DETAIL JADWAL KETIKA DIKETUK
-                lessonCard.setOnClickListener {
-                    AlertDialog.Builder(this)
-                        .setTitle("Rincian Mata Pelajaran")
-                        .setMessage(
-                            "Mata Pelajaran: $cleanMapel\n" +
-                                    "Hari: $dayName\n" +
-                                    "Waktu KBM: $waktu\n" +
-                                    "Guru Pengajar: $guru\n" +
-                                    "Ruangan Kelas: $ruang\n" +
-                                    if (isMomentum) "\n⚡ Status: Terkena Jadwal Momentum Dinamis" else "\nStatus: Jadwal Reguler Normal"
-                        )
-                        .setPositiveButton("Tutup", null)
-                        .show()
-                }
-
-                cardsContainer.addView(lessonCard)
+            card.setOnClickListener {
+                AlertDialog.Builder(this)
+                    .setTitle("Rincian Mata Pelajaran ($hari)")
+                    .setMessage("Mata Pelajaran: $fullMapel\nWaktu: ${item["waktu"]} WIB\nGuru: ${item["guru"]}\nRuangan: ${item["ruang"]}")
+                    .setPositiveButton("Tutup", null)
+                    .show()
             }
-
-            container.addView(dayGroupView)
+            container.addView(itemView)
         }
     }
 
     private fun loadCalendarPage() {
-        val eventsContainer = binding.calendarEventsContainer
-        eventsContainer.removeAllViews()
+        val isDark = session.isDarkMode()
+        val grid = binding.layoutFullMonthGrid
+        grid.removeAllViews()
 
-        val events = db.getEvents()
-        for (event in events) {
-            val tglAngka = event["tanggal_angka"]?.toIntOrNull() ?: 0
-            val warnaHex = event["warna_hex"] ?: "#FEE2E2"
+        val totalDays = if (currentCalendarMonth == 11) 30 else 31
+        binding.tvCalendarMonthTitle.text = if (currentCalendarMonth == 11) "November 2026" else "Desember 2026"
+        binding.tvCalendarMonthTitle.setTextColor(if (isDark) Color.WHITE else Color.parseColor("#0F172A"))
 
-            if (tglAngka in 1..30) {
-                val resId = resources.getIdentifier("tvDate$tglAngka", "id", packageName)
-                if (resId != 0) {
-                    val tvDateCell = findViewById<TextView>(resId)
-                    tvDateCell?.setBackgroundColor(Color.parseColor(warnaHex))
-                }
+        var dayCounter = 1
+        val startOffset = if (currentCalendarMonth == 11) 6 else 1
+
+        while (dayCounter <= totalDays) {
+            val row = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                weightSum = 7f
             }
 
+            for (col in 0..6) {
+                val cell = TextView(this).apply {
+                    layoutParams = LinearLayout.LayoutParams(0, 96, 1f)
+                    gravity = Gravity.CENTER
+                    textSize = 13f
+                }
+
+                if ((grid.childCount == 0 && col < startOffset) || dayCounter > totalDays) {
+                    cell.text = ""
+                } else {
+                    cell.text = dayCounter.toString()
+                    cell.setTextColor(if (col == 6) Color.parseColor("#DC2626") else if (isDark) Color.WHITE else Color.parseColor("#0F172A"))
+
+                    if (currentCalendarMonth == 11 && (dayCounter == 5 || dayCounter == 6)) {
+                        cell.setBackgroundColor(Color.parseColor("#FEE2E2"))
+                        cell.setTextColor(Color.parseColor("#DC2626"))
+                        cell.paint.isFakeBoldText = true
+                    } else if (currentCalendarMonth == 11 && dayCounter == 10) {
+                        cell.setBackgroundColor(Color.parseColor("#FEF3C7"))
+                        cell.setTextColor(Color.parseColor("#B45309"))
+                        cell.paint.isFakeBoldText = true
+                    } else if (currentCalendarMonth == 11 && dayCounter in 20..28) {
+                        cell.setBackgroundColor(Color.parseColor("#DBEAFE"))
+                        cell.setTextColor(Color.parseColor("#1E40AF"))
+                    } else if (currentCalendarMonth == 12 && dayCounter >= 20) {
+                        cell.setBackgroundColor(Color.parseColor("#DCFCE7"))
+                        cell.setTextColor(Color.parseColor("#059669"))
+                    }
+                    dayCounter++
+                }
+                row.addView(cell)
+            }
+            grid.addView(row)
+        }
+
+        val eventsContainer = binding.calendarEventsContainer
+        eventsContainer.removeAllViews()
+        for (event in db.getEvents()) {
             val tvEvent = TextView(this).apply {
                 text = "📅 ${event["nama"]}\nKategori: ${event["kategori"]} | Waktu: ${event["tanggal"]}"
-                textSize = 14f
-                setTextColor(ContextCompat.getColor(this@MainActivity, R.color.text_primary))
-                setPadding(32, 28, 32, 28)
-                setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.white))
-                elevation = 2f
-
+                textSize = 13f
+                setTextColor(if (isDark) Color.WHITE else Color.parseColor("#0F172A"))
+                setPadding(32, 24, 32, 24)
+                setBackgroundColor(if (isDark) Color.parseColor("#1F2937") else Color.WHITE)
+                ViewCompat.setElevation(this, 2f)
                 val params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                params.setMargins(0, 0, 0, 16)
+                params.setMargins(0, 0, 0, 14)
                 layoutParams = params
-
-                setOnClickListener {
-                    AlertDialog.Builder(this@MainActivity)
-                        .setTitle(event["nama"])
-                        .setMessage("Kategori: ${event["kategori"]}\nTanggal: ${event["tanggal"]}\nLokasi: ${event["lokasi"]}")
-                        .setPositiveButton("Tutup", null)
-                        .show()
-                }
             }
             eventsContainer.addView(tvEvent)
         }
     }
 
-    private fun selectDay(hari: String, selectedBtn: Button) {
-        for (btn in dayButtons) {
-            btn.backgroundTintList = ContextCompat.getColorStateList(this, R.color.white)
-            btn.setTextColor(ContextCompat.getColor(this, R.color.text_primary))
+    private fun updateNotifFilterChips(activeBtn: TextView) {
+        val chips = listOf(binding.btnFilterNotifSemua, binding.btnFilterNotifAkademik, binding.btnFilterNotifRuangan)
+        for (c in chips) {
+            c.setBackgroundColor(Color.parseColor("#40FFFFFF"))
+            c.setTextColor(Color.WHITE)
         }
-        selectedBtn.backgroundTintList = ContextCompat.getColorStateList(this, R.color.telkom_red)
-        selectedBtn.setTextColor(ContextCompat.getColor(this, R.color.white))
+        activeBtn.setBackgroundColor(Color.WHITE)
+        activeBtn.setTextColor(Color.parseColor("#DC2626"))
+    }
 
-        val allSchedules = db.getScheduleByClass(session.getKelasId())
-        val daily = allSchedules.filter { it["mapel"]?.contains("[$hari]") == true }
+    private fun loadNotificationPage() {
+        val isDark = session.isDarkMode()
+        val container = binding.layoutNotifHistoryContainer
+        container.removeAllViews()
 
-        binding.layoutTimetableCards.removeAllViews()
-        timetableCardViews.clear()
+        val cardBg = if (isDark) Color.parseColor("#1F2937") else Color.WHITE
+        val textPrimary = if (isDark) Color.WHITE else Color.parseColor("#0F172A")
+        val textSec = if (isDark) Color.parseColor("#CBD5E1") else Color.parseColor("#64748B")
 
-        for ((index, mapelItem) in daily.withIndex()) {
-            val card = CardView(this).apply {
-                radius = 32f
-                elevation = 4f
-                setCardBackgroundColor(if (index == 0) ContextCompat.getColor(this@MainActivity, R.color.telkom_red_light) else ContextCompat.getColor(this@MainActivity, R.color.white))
-                val params = LinearLayout.LayoutParams(620, LinearLayout.LayoutParams.WRAP_CONTENT)
-                params.setMargins(0, 0, 24, 0)
-                layoutParams = params
-                isClickable = true
-                isFocusable = true
-                foreground = ContextCompat.getDrawable(this@MainActivity, android.R.drawable.list_selector_background)
+        if (currentNotifFilter == "Semua" || currentNotifFilter == "Akademik") {
+            val itemAkademik = layoutInflater.inflate(R.layout.item_single_lesson, container, false) as CardView
+            itemAkademik.setCardBackgroundColor(cardBg)
+            itemAkademik.findViewById<TextView>(R.id.tvSingleSubject).apply {
+                text = "⏰ [Akademik] Pengingat Pergantian Jam (10 Menit)"
+                setTextColor(textPrimary)
             }
+            itemAkademik.findViewById<TextView>(R.id.tvSingleTime).apply {
+                text = "Hari Ini • Jadwal Belajar & Pergantian Mata Pelajaran"
+                setTextColor(textSec)
+            }
+            itemAkademik.findViewById<TextView>(R.id.tvSingleRoom).apply {
+                text = "Sesi Mata Pelajaran berikutnya akan segera dimulai. Harap persiapkan perlengkapan belajar."
+                setTextColor(textSec)
+            }
+            container.addView(itemAkademik)
+        }
 
-            timetableCardViews.add(card)
-            val currentMapelName = mapelItem["mapel"]?.replace("[$hari] ", "") ?: ""
-
-            card.setOnClickListener {
-                for (c in timetableCardViews) {
-                    c.setCardBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.white))
-                }
-                card.setCardBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.telkom_red_light))
-
-                if (index + 1 < daily.size) {
-                    val nextMapel = daily[index + 1]
-                    val nextMapelName = nextMapel["mapel"]?.replace("[$hari] ", "") ?: ""
-                    activeReminderTitle = "Pengingat Pergantian Jam: $nextMapelName"
-                    activeReminderMessage = "Pergantian sesi ke $nextMapelName (${nextMapel["guru"]}) di ruang ${nextMapel["ruang"]} pukul ${nextMapel["waktu"]}."
+        if (currentNotifFilter == "Semua" || currentNotifFilter == "Ruangan") {
+            val latestMomentum = db.getLatestMomentum()
+            val itemRuang = layoutInflater.inflate(R.layout.item_single_lesson, container, false) as CardView
+            itemRuang.setCardBackgroundColor(if (isDark) Color.parseColor("#3B1F24") else Color.parseColor("#FFF5F5"))
+            itemRuang.findViewById<TextView>(R.id.tvSingleSubject).apply {
+                text = "🏢 [Ruangan] Info Perpindahan Ruangan Lab"
+                setTextColor(textPrimary)
+            }
+            itemRuang.findViewById<TextView>(R.id.tvSingleTime).apply {
+                text = "Update Real-time Sarpras & Kurikulum"
+                setTextColor(textSec)
+            }
+            itemRuang.findViewById<TextView>(R.id.tvSingleRoom).apply {
+                text = if (latestMomentum != null) {
+                    "Mapel ${latestMomentum["mapel_baru"]} dialihkan ke ${latestMomentum["ruang_baru"]} (${latestMomentum["alasan"]})"
                 } else {
-                    activeReminderTitle = "Sesi Terakhir ($currentMapelName)"
-                    activeReminderMessage = "Ini adalah sesi pelajaran terakhir untuk hari $hari. Tidak ada pergantian jam berikutnya."
+                    "Seluruh laboratorium RPL dan ruang kelas dalam kondisi siap pakai sesuai jadwal reguler."
                 }
-
-                binding.tvNotifTitle.text = activeReminderTitle
-                binding.tvNotifDesc.text = activeReminderMessage
-                Toast.makeText(this@MainActivity, "Pengingat sesi aktif: $currentMapelName", Toast.LENGTH_SHORT).show()
+                setTextColor(textSec)
             }
-
-            val cardContent = LinearLayout(this).apply {
-                orientation = LinearLayout.VERTICAL
-                setPadding(36, 32, 36, 32)
-
-                val tvPeriod = TextView(this@MainActivity).apply {
-                    text = if (index == 0) "Sesi Saat Ini" else "Sesi ${index + 1}"
-                    textSize = 12f
-                    setTextColor(ContextCompat.getColor(this@MainActivity, R.color.telkom_red))
-                    typeface = android.graphics.Typeface.DEFAULT_BOLD
-                }
-
-                val tvTime = TextView(this@MainActivity).apply {
-                    text = mapelItem["waktu"]
-                    textSize = 12f
-                    setTextColor(ContextCompat.getColor(this@MainActivity, R.color.text_secondary))
-                }
-
-                val tvSubject = TextView(this@MainActivity).apply {
-                    text = currentMapelName
-                    textSize = 15f
-                    setTextColor(ContextCompat.getColor(this@MainActivity, R.color.text_primary))
-                    typeface = android.graphics.Typeface.DEFAULT_BOLD
-                    setPadding(0, 10, 0, 4)
-                }
-
-                val tvRoomTeacher = TextView(this@MainActivity).apply {
-                    text = "Ruang: " + mapelItem["ruang"] + " • " + mapelItem["guru"]
-                    textSize = 12f
-                    setTextColor(ContextCompat.getColor(this@MainActivity, R.color.text_secondary))
-                }
-
-                addView(tvPeriod)
-                addView(tvTime)
-                addView(tvSubject)
-                addView(tvRoomTeacher)
-            }
-
-            card.addView(cardContent)
-            binding.layoutTimetableCards.addView(card)
+            container.addView(itemRuang)
         }
-
-        if (daily.size > 1) {
-            val nextMapel = daily[1]
-            val nextMapelName = nextMapel["mapel"]?.replace("[$hari] ", "") ?: ""
-            activeReminderTitle = "Pengingat Pergantian Jam: $nextMapelName"
-            activeReminderMessage = "10 Menit lagi pergantian ke sesi $nextMapelName (${nextMapel["guru"]}) di ${nextMapel["ruang"]}."
-        } else if (daily.isNotEmpty()) {
-            activeReminderTitle = "Jadwal Hari $hari"
-            activeReminderMessage = "Hanya terdapat 1 sesi pelajaran hari ini."
-        }
-        binding.tvNotifTitle.text = activeReminderTitle
-        binding.tvNotifDesc.text = activeReminderMessage
     }
 
     @SuppressLint("MissingPermission")
@@ -570,7 +468,6 @@ class MainActivity : AppCompatActivity() {
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setContentTitle(title)
             .setContentText(message)
-            .setStyle(NotificationCompat.BigTextStyle().bigText(message))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
             .build()
